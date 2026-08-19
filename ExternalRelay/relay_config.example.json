@@ -1,0 +1,15 @@
+{
+  "QueueDirectory": "C:\\Users\\<USER>\\AppData\\Roaming\\SpaceEngineers\\Saves\\<STEAM_ID>\\<WORLD_NAME>\\Storage\\DiscordAPI_DiscordAPI",
+  "DefaultDiscordUrl": "https://discord.com/api/webhooks/...",
+  "Channels": {
+    "Chat": {
+      "DiscordUrl": "https://discord.com/api/webhooks/..."
+    },
+    "Connections": {
+      "DiscordUrl": "https://discord.com/api/webhooks/..."
+    },
+    "Deaths": {
+      "DiscordUrl": "https://discord.com/api/webhooks/..."
+    }
+  }
+}

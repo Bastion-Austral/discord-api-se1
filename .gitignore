@@ -1,0 +1,21 @@
+# User configuration files
+ExternalRelay/relay_config.json
+
+# C# build outputs
+ExternalRelay/bin/
+ExternalRelay/obj/
+
+# Visual Studio directories
+**/.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Executables
+ExternalRelay/DiscordRelay.exe
+
+# Local Context folders
+.contextos/
+
+
