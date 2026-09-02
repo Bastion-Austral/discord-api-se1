@@ -24,37 +24,41 @@ To deploy the mod locally for testing:
 
 ## 🚀 External Relay (DiscordRelay)
 
-Since the Space Engineers game sandbox blocks direct HTTP requests for security reasons, this external console application bridges the game storage files with Discord's APIs.
+Since the Space Engineers game sandbox blocks direct HTTP requests for security reasons (and Steam Workshop removes `.exe` files from published mods), this companion console application bridges the game storage files with Discord's APIs.
 
-### Requirements
-*   [.NET Core SDK](https://dotnet.microsoft.com/download) (Version 6.0 or higher recommended).
+### 📥 Production Download (GitHub Releases)
+For dedicated server administrators and players running production worlds:
+
+```powershell
+New-Item -ItemType Directory -Force "DiscordAPI" | Out-Null; Set-Location "DiscordAPI"; @("DiscordRelay.exe", "relay_config.example.json", "README.md", "README.txt") | ForEach-Object { Invoke-WebRequest "https://github.com/Bastion-Austral/discord-api-se1/releases/download/v1.0.0/$_" -OutFile ".\$_" }
+```
+Or download manually from [GitHub Releases](https://github.com/Bastion-Austral/discord-api-se1/releases/tag/v1.0.0).
+
+---
 
 ### Environment Build Guidelines (Development vs. Production)
 
-Depending on your current goal, you should build the relay using one of the following configurations:
+If you are developing or compiling from source:
+*   [.NET Core SDK](https://dotnet.microsoft.com/download) (Version 6.0 or higher).
 
-#### 🧪 For Development & Testing (Recommended for now)
-Use the **Debug** configuration. This builds the relay with full debug symbols, disables compiler optimizations, and preserves clear stack traces in case something crashes. It also runs faster if you use the hot-reload runner.
+#### 🧪 For Development & Testing
 *   **Compile in Debug mode:**
     ```bash
     cd ExternalRelay
     dotnet build -c Debug
     ```
-    The compiled binary will be located in: `ExternalRelay/bin/Debug/net6.0/DiscordRelay.exe`.
 *   **Run directly in Development:**
     ```bash
     cd ExternalRelay
     dotnet run
     ```
 
-#### 📦 For Production & Live Servers
-Use the **Release** configuration. This enables full compiler optimizations, resulting in a significantly smaller binary footprint and maximum execution performance with minimal CPU/RAM overhead while running indefinitely.
-*   **Compile in Release mode:**
-    ```bash
+#### 📦 For Production & Standalone Executable
+*   **Compile single-file Release executable:**
+    ```powershell
     cd ExternalRelay
-    dotnet build -c Release
+    powershell -ExecutionPolicy Bypass -File .\publish.ps1
     ```
-    The compiled binary will be located in: `ExternalRelay/bin/Release/net6.0/DiscordRelay.exe`.
 
 ---
 
@@ -65,7 +69,7 @@ Edit the `relay_config.json` file located next to the Relay executable:
 
 ```json
 {
-  "QueueDirectory": "C:\\Users\\dmira\\AppData\\Roaming\\SpaceEngineers\\Saves\\<YOUR_STEAM_ID>\\<WORLD_NAME>\\Storage\\Discord API_DiscordAPI",
+  "QueueDirectory": "C:\\Users\\<USER>\\AppData\\Roaming\\SpaceEngineers\\Saves\\<YOUR_STEAM_ID>\\<WORLD_NAME>\\Storage\\Discord API_DiscordAPI",
   "DefaultDiscordUrl": "https://discord.com/api/webhooks/...",
   "Channels": {
     "Chat": {
@@ -96,37 +100,15 @@ Edit the `relay_config.json` file located next to the Relay executable:
 
 ## 🛡️ Security & Integrity Verification
 
-To protect users against third-party re-uploads or malicious modifications, we provide cryptographic verification of the official release binary.
+To protect users against third-party re-uploads or malicious modifications, verify the cryptographic signature (SHA-256 hash) against the official hash displayed on [GitHub Releases](https://github.com/Bastion-Austral/discord-api-se1/releases/tag/v1.0.0).
 
-### 1. Verification via Hash (SHA-256) (For Beginners)
-To guarantee that this binary has not been modified by a third party, you can check its cryptographic signature (SHA-256 hash) before running it:
-
-1. **Open Windows PowerShell:**
-   * Press the **Windows Key** on your keyboard.
-   * Type **PowerShell** and click on **Windows PowerShell** to open it.
-2. **Go to the folder where the file is located:**
-   * In File Explorer, find the folder containing `DiscordRelay.exe`.
-   * In the blue PowerShell window, type `cd ` (type the letters **c** and **d**, followed by a **space**).
-   * **Drag and drop** the folder containing `DiscordRelay.exe` from your File Explorer directly into the PowerShell window. The computer will type the full path for you!
-   * Press the **Enter** key.
-3. **Run the check command:**
-   * Copy the command below, paste it into the PowerShell window, and press **Enter** (you can read more about what this command does in the [official Microsoft Get-FileHash documentation](https://learn.microsoft.com/powershell/module/microsoft.powershell.utility/get-filehash)):
-     ```powershell
-     Get-FileHash -Path .\DiscordRelay.exe -Algorithm SHA256
-     ```
-4. **Compare the result:**
-   * Compare the long string of numbers and letters shown on your screen with the official hash for your version:
-
-* **v1.0.0**: `274F04AD53620F07152BE2500836D544090E67D3BD128B2F55688F3ED43BE62D`
-
-*If the hash does not match, DO NOT execute the file and delete it immediately.*
-
-### 2. Self-Compilation (Zero Trust)
-If you prefer not to run pre-compiled binaries, you can compile the executable yourself using the included source code:
-1. Open PowerShell in the `ExternalRelay` directory.
-2. Run the script:
+### Verification via PowerShell:
+1. Open Windows PowerShell in your relay folder.
+2. Run:
    ```powershell
-   powershell -ExecutionPolicy Bypass -File .\publish.ps1
+   Get-FileHash -Path .\DiscordRelay.exe -Algorithm SHA256
    ```
-This will compile a secure, optimized, single-file executable directly from the source code on your machine.
+3. Compare with the official hash from GitHub:
+   * **v1.0.0**: `274F04AD53620F07152BE2500836D544090E67D3BD128B2F55688F3ED43BE62D`
 
+*If the hash does not match the official release on GitHub, DO NOT execute the file and delete it immediately.*

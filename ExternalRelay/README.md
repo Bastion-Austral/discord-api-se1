@@ -2,6 +2,19 @@
 
 This is the companion console application for the **Space Engineers Discord API Mod**. Since the game's script sandbox blocks direct HTTP requests for security reasons, this lightweight program bridges the game's local storage event files with Discord's webhook API.
 
+> [!NOTE]
+> **Steam Workshop Notice:** Steam Workshop automatically strips `.exe` binaries upon mod upload. For production deployments, download `DiscordRelay.exe` directly from our official [GitHub Releases](https://github.com/Bastion-Austral/discord-api-se1/releases/tag/v1.0.0).
+
+---
+
+## 📥 Quick Download (PowerShell)
+
+To automatically create a `DiscordAPI` folder and download all required companion files:
+
+```powershell
+New-Item -ItemType Directory -Force "DiscordAPI" | Out-Null; Set-Location "DiscordAPI"; @("DiscordRelay.exe", "relay_config.example.json", "README.md", "README.txt") | ForEach-Object { Invoke-WebRequest "https://github.com/Bastion-Austral/discord-api-se1/releases/download/v1.0.0/$_" -OutFile ".\$_" }
+```
+
 ---
 
 ## ⚙️ Configuration
@@ -35,7 +48,7 @@ Before running the executable, you must configure `relay_config.json`. You can r
 
 ## 🛡️ Security & Integrity Verification
 
-To guarantee that this binary has not been modified by a third party, you can verify its cryptographic signature (SHA-256 hash) before running it.
+To guarantee that this binary has not been modified by a third party, you can verify its cryptographic signature (SHA-256 hash) against the official hash displayed on [GitHub Releases](https://github.com/Bastion-Austral/discord-api-se1/releases/tag/v1.0.0).
 
 ### Step-by-Step Verification Guide for Beginners:
 1. **Open the Terminal (PowerShell):**
@@ -44,20 +57,19 @@ To guarantee that this binary has not been modified by a third party, you can ve
 2. **Navigate to your mod folder:**
    * Open your File Explorer and find the folder where `DiscordRelay.exe` is located.
    * In the blue PowerShell window, type `cd ` (type the letters **c** and **d**, followed by a **space**).
-   * **Drag and drop** the folder containing `DiscordRelay.exe` from your File Explorer directly into the PowerShell window. The computer will type the full path for you!
+   * **Drag and drop** the folder containing `DiscordRelay.exe` from your File Explorer directly into the PowerShell window.
    * Press the **Enter** key.
 3. **Run the check command:**
-   * Copy the command below, paste it into the PowerShell window, and press **Enter** (you can read more about what this command does in the [official Microsoft Get-FileHash documentation](https://learn.microsoft.com/powershell/module/microsoft.powershell.utility/get-filehash)):
+   * Run the command below (see [Microsoft Get-FileHash documentation](https://learn.microsoft.com/powershell/module/microsoft.powershell.utility/get-filehash)):
      ```powershell
      Get-FileHash -Path .\DiscordRelay.exe -Algorithm SHA256
      ```
-4. **Compare the result:**
-   * Compare the long string of numbers and letters (the Hash) shown on your screen with the official hash for your version below:
+4. **Compare the result with GitHub:**
+   * Compare the output hash on your screen with the official hash listed under the release assets on GitHub:
 
-* **v1.0.0**: `274F04AD53620F07152BE2500836D544090E67D3BD128B2F55688F3ED43BE62D`
+* **Official v1.0.0 Hash**: `274F04AD53620F07152BE2500836D544090E67D3BD128B2F55688F3ED43BE62D`
 
-*If the hash shown in PowerShell does not match the official hash exactly, DO NOT run the file and delete it immediately.*
-
+*If the hash shown in PowerShell does not match the official hash on GitHub, DO NOT run the file and delete it immediately.*
 
 ---
 
@@ -91,5 +103,4 @@ We provide a PowerShell script to compile a highly optimized, standalone, self-c
    ```powershell
    powershell -ExecutionPolicy Bypass -File .\publish.ps1
    ```
-This compiles the code into `DiscordRelay.exe` at the root of `ExternalRelay/` containing the full .NET runtime (so server admins do not need to install .NET).
-
+This compiles the code into `DiscordRelay.exe` containing the full .NET runtime.
